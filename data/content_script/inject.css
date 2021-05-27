@@ -1,0 +1,114 @@
+html[ruler-mode], 
+html[ruler-mode] * {
+  user-select: none;
+}
+
+.ruler-mode-container {
+  top: 0 !important;
+  left: 0 !important;
+  border: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  direction: ltr !important;
+  position: fixed !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  cursor: crosshair !important;
+  text-shadow: none !important;
+  z-Index: 2147483644 !important;
+  box-sizing: border-box !important;
+  background-color: transparent !important;
+  background-image: linear-gradient(rgba(0,0,0,0.05) 1px, transparent 0), linear-gradient(90deg, rgba(0,0,0,0.05) 1px, transparent 0);
+  background-size: 1px 51px, 51px 1px, 0 0, 0 0;
+  background-position: 0 -1px, -1px 0, 0 0, 0 0;
+}
+
+.ruler-mode-rectangle {
+  border-width: 0;
+  margin: 0 !important;
+  padding: 0 !important;
+  direction: ltr !important;
+  position: fixed !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  cursor: crosshair !important;
+  text-shadow: none !important;
+  border-style: solid !important;
+  z-Index: 2147483645 !important;
+  box-sizing: border-box !important;
+  border-color: rgb(0 0 0 / 15%) !important;
+  background-color: rgb(245 196 0 / 15%) !important;
+}
+
+.ruler-mode-rectangle div {
+  text-align: left;
+  border: 0 !important;
+  margin: 1px !important;
+  color: #111 !important;
+  width: 72px !important;
+  height: 28px !important;
+  padding: 0 5px !important;
+  direction: ltr !important;
+  min-width: 72px !important;
+  max-width: 72px !important;
+  font-size: 16px !important;
+  min-height: 28px !important;
+  max-height: 28px !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  line-height: 28px !important;
+  user-select: none !important;
+  text-shadow: none !important;
+  position: relative !important;
+  font-weight: normal !important;
+  letter-spacing: 1px !important;
+  font-family: monospace !important;
+  box-sizing: border-box !important;
+  background-color: transparent !important;
+}
+
+.ruler-mode-info {
+  top: 1px !important;
+  left: 1px !important;
+  margin: 0 !important;
+  border: 0 !important;
+  opacity: 1 !important;
+  width: 120px !important;
+  outline: none !important;
+  display: block !important;
+  direction: ltr !important;
+  position: fixed !important;
+  font-size: 11px !important;
+  max-width: 120px !important;
+  min-width: 120px !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  user-select: none !important;
+  text-shadow: none !important;
+  padding: 7px 10px !important;
+  text-align: center !important;
+  letter-spacing: 1px !important;
+  z-index: 2147483647 !important;
+  visibility: visible !important;
+  font-weight: normal !important;
+  box-sizing: border-box !important;
+  color: rgb(255, 255, 255) !important;
+  font-family: arial,sans-serif !important;
+  background-color: rgb(245, 196, 0) !important;
+}
+
+@media only screen and (hover: none) and (pointer: coarse) {
+  html[ruler-mode], 
+  html[ruler-mode] body {
+    overflow: hidden;
+  }
+}
+
+@-moz-document url-prefix() {
+  .ruler-mode-info,
+  .ruler-mode-rectangle div {
+    font-family: monaco, "andale mono", "lucida console", "courier new", monospace !important;
+  }
+}
