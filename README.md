@@ -7,7 +7,6 @@ Download links:
 Chrome: https://chrome.google.com/webstore/detail/page-ruler/jcbmcnpepaddcedmjdcmhbekjhbfnlff  
 Edge: https://microsoftedge.microsoft.com/addons/detail/dbbmodidecniimhhohmohndfdhhfcdbo  
 Firefox: https://addons.mozilla.org/en-US/firefox/addon/page-ruler/  
-Opera: https://addons.opera.com/en/extensions/details/page-ruler/  
 
 --------------------------------------------------------------
 
