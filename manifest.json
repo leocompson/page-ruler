@@ -1,22 +1,26 @@
 {
-  "version": "0.1.0",
+  "version": "0.1.3",
   "name": "Page Ruler",
-  "manifest_version": 2,
+  "manifest_version": 3,
   "offline_enabled": true,
-  "short_name": "page-ruler",
-  "permissions": ["storage", "activeTab"],
   "homepage_url": "https://mybrowseraddon.com/page-ruler.html",
   "description": "Measure page elements size in pixel with an easy-to-use ruler.",
-  "background": {
-    "persistent": false,
-    "scripts": [
-      "lib/config.js", 
-      "lib/chrome.js",
-      "lib/runtime.js",
-      "lib/common.js"
-    ]
+  "commands": {
+    "_execute_action": {}
   },
-  "browser_action": {
+  "background": {
+    "service_worker": "background.js"
+  },
+  "options_ui": {
+    "open_in_tab": true,
+    "page": "data/options/options.html"
+  },
+  "permissions": [
+    "storage",
+    "scripting",
+    "activeTab"
+  ],
+  "action": {
     "default_title": "Page Ruler",
     "default_icon": {
       "16": "data/icons/16.png",
