@@ -24,12 +24,13 @@ table tr td {
 table tr td label {
   color: #333;
   width: 100%;
-  height: 150px;
+  height: 350px;
   cursor: pointer;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
   overflow: hidden;
-  line-height: 150px;
+  user-select: none;
+  line-height: 350px;
   white-space: nowrap;
   padding-right: 10px;
   display: inline-block;
@@ -46,13 +47,15 @@ table tr td[class] {
   text-align: center;
   width: calc(100% / 2);
   background-size: contain;
-  height: calc(100vw / 3 - 300px);
+  border: solid 10px transparent;
+  height: calc(100vw / 3 - 320px);
 }
 
 table tr[class="header"] td {
   color: #555;
-  font-size: 12px;
+  font-size: 13px;
   overflow: hidden;
+  font-weight: 600;
   text-align: center;
   white-space: nowrap;
   font-family: sans-serif;
@@ -83,14 +86,15 @@ input[type='checkbox'] {
 .grayscale-2 {background: url('images/grayscale-2.png') no-repeat 100% center}
 
 .content {
+  border: 0;
   padding: 0;
   margin: 10px;
-  border: solid 1px rgba(0,0,0,0.1);
 }
 
 .logo {
   width: 100%;
   height: 128px;
+  border-bottom: solid 1px rgba(0,0,0,0.1);
   background: url('../icons/128.png') no-repeat center center;
   background-size: 64px;
 }
