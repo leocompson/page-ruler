@@ -12,7 +12,11 @@ table {
   border: 0;
   padding: 0;
   width: 100%;
-  border-spacing: 10px;
+}
+
+input[type='checkbox'] {
+  margin: auto;
+  vertical-align: middle;
 }
 
 table tr td {
@@ -24,13 +28,13 @@ table tr td {
 table tr td label {
   color: #333;
   width: 100%;
-  height: 350px;
   cursor: pointer;
   font-size: 13px;
   font-weight: 600;
   overflow: hidden;
+  min-width: 210px;
+  text-indent: 5px;
   user-select: none;
-  line-height: 350px;
   white-space: nowrap;
   padding-right: 10px;
   display: inline-block;
@@ -39,62 +43,119 @@ table tr td label {
   border-right: solid 1px rgba(0,0,0,0.1);
 }
 
+table tr td:has(label) {
+  text-align: left;
+}
+
 table tr td:has(input) {
+  padding: 0 20px;
   text-align: center;
 }
 
-table tr td[class] {
+table.settings {
+  border-spacing: 0;
+}
+
+table.settings tr td.note {
+  width: 100%;
+  color: #333;
+  text-align: left;
+  border: solid 15px transparent;
+}
+
+table.settings tr td:has(input) {
+  height: 100px;
+  text-align: left;
+}
+
+table.settings tr td label {
+  height: 72px;
+  line-height: 72px;
+}
+
+table.metrics {
+  border-spacing: 0 15px;
+}
+
+table.metrics tr td[class] {
   text-align: center;
   width: calc(100% / 2);
   background-size: contain;
-  border: solid 10px transparent;
-  height: calc(100vw / 3 - 320px);
+  border: solid 15px transparent;
+  height: calc(100vw / 3 - 450px);
+}
+
+table.metrics tr td label {
+  height: 200px;
+  line-height: 200px;
 }
 
 table tr[class="header"] td {
-  color: #555;
+  color: #333;
+  padding: 15px;
   font-size: 13px;
   overflow: hidden;
   font-weight: 600;
-  text-align: center;
+  text-align: left;
   white-space: nowrap;
   font-family: sans-serif;
   text-overflow: ellipsis;
 }
 
+table tr[class="header"] td[colspan] {
+  text-align: center;
+}
+
+table tr[class="header"] {
+  background-color: #f0f0f2;
+}
+
+table tr:has(#linear),
 table tr:has(#colorful),
+table tr:has(#circular),
 table tr:has(#grayscale) {
+  border-radius: 5px;
   outline: solid 2px transparent;
 }
 
-html[colorful='false'] table tr:has(#grayscale) {
+html[placement='default'] table tr {
+  outline: solid 2px transparent;
+}
+
+html[placement='linear'] table tr:has(#linear) {
   outline: solid 2px #f5c400;
 }
 
-html[colorful='true'] table tr:has(#colorful) {
+html[placement='colorful'] table tr:has(#colorful) {
   outline: solid 2px #f5c400;
 }
 
-input[type='checkbox'] {
-  margin: auto;
-  vertical-align: middle;
+html[placement='circular'] table tr:has(#circular) {
+  outline: solid 2px #f5c400;
 }
 
+html[placement='grayscale'] table tr:has(#grayscale) {
+  outline: solid 2px #f5c400;
+}
+
+.linear-1 {background: url('images/linear-1.png') no-repeat 100% center}
+.linear-2 {background: url('images/linear-2.png') no-repeat 100% center}
 .colorful-1 {background: url('images/colorful-1.png') no-repeat 100% center}
 .colorful-2 {background: url('images/colorful-2.png') no-repeat 100% center}
+.circular-1 {background: url('images/circular-1.png') no-repeat 100% center}
+.circular-2 {background: url('images/circular-2.png') no-repeat 100% center}
 .grayscale-1 {background: url('images/grayscale-1.png') no-repeat 100% center}
 .grayscale-2 {background: url('images/grayscale-2.png') no-repeat 100% center}
 
 .content {
   border: 0;
+  margin: 0;
   padding: 0;
-  margin: 10px;
 }
 
 .logo {
   width: 100%;
   height: 128px;
-  border-bottom: solid 1px rgba(0,0,0,0.1);
   background: url('../icons/128.png') no-repeat center center;
   background-size: 64px;
 }

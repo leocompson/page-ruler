@@ -31,8 +31,41 @@ if (!background) {
   })();
 
   var config = {
+    "page": {
+      "scroll": {
+        "x": null, 
+        "y": null
+      }
+    },
     "options": {
-      "colorful": false
+      "scroll": false,
+      "linear": false,
+      "colorful": false,
+      "circular": false,
+      "grayscale": true
+    },
+    "action": {
+      "rulermode": function (e) {
+        config.ruler[e.state === "ON" ? "show" : "hide"]();
+      },
+      "placement": function (e) {
+        config.options.scroll = e.scroll;
+        config.options.linear = e.linear;
+        config.options.colorful = e.colorful;
+        config.options.circular = e.circular;
+        config.options.grayscale = e.grayscale;
+      },
+      "scroll": function () {
+        if (config.options.scroll) {
+          if (config.ruler.element.rect && config.ruler.element.circle) {
+            config.ruler.element.circle.style.top = ((config.ruler.scroll.y + (config.ruler.start.y - config.ruler.radius)) + (config.page.scroll.y - window.scrollY)) + "px";
+            config.ruler.element.circle.style.left = ((config.ruler.scroll.x + (config.ruler.start.x - config.ruler.radius)) + (config.page.scroll.x - window.scrollX)) + "px";
+            /*  */
+            config.ruler.element.rect.style.top = ((config.ruler.scroll.y + (config.ruler.current.y < config.ruler.start.y ? config.ruler.current.y : config.ruler.start.y)) + (config.page.scroll.y - window.scrollY)) + "px";
+            config.ruler.element.rect.style.left = ((config.ruler.scroll.x + (config.ruler.current.x < config.ruler.start.x ? config.ruler.current.x : config.ruler.start.x)) + (config.page.scroll.x - window.scrollX)) + "px";
+          }
+        }
+      }
     },
     "ruler": {
       "x": null,
@@ -40,6 +73,7 @@ if (!background) {
       "element": {},
       "width": null,
       "height": null,
+      "radius": null,
       "action": true,
       "active": false,
       "status": false,
@@ -55,15 +89,29 @@ if (!background) {
         "x": null, 
         "y": null
       },
+      "keydown": function (e) {
+        e.stopPropagation();
+        if (e.cancelable) e.preventDefault();
+        /*  */
+        if (e.key === "Escape") background.send("escape", {"state": "OFF"});
+        /*  */
+        if (e.key === "ArrowUp") config.ruler.input.move({"stepX": 0, "stepY": -1, "type": "keydown"});
+        if (e.key === "ArrowDown") config.ruler.input.move({"stepX": 0, "stepY": +1, "type": "keydown"});
+        if (e.key === "ArrowLeft") config.ruler.input.move({"stepX": -1, "stepY": 0, "type": "keydown"});
+        if (e.key === "ArrowRight") config.ruler.input.move({"stepX": +1, "stepY": 0, "type": "keydown"});
+      },
       "build": function () {
         config.ruler.element.rect = document.createElement("div");
+        config.ruler.element.circle = document.createElement("div");
         config.ruler.element.container = document.createElement("div");
         config.ruler.element.section = document.createElement("section");
         /*  */
+        config.ruler.element.circle.className = "rulermode-circle";
         config.ruler.element.rect.className = "rulermode-rectangle";
         config.ruler.element.container.className = "rulermode-container";
         /*  */
         document.body.appendChild(config.ruler.element.container);
+        document.body.appendChild(config.ruler.element.circle);
         document.body.appendChild(config.ruler.element.rect);
       },
       "info": {
@@ -78,24 +126,15 @@ if (!background) {
           /*  */
           config.ruler.element.info.textContent = "Ruler mode...";
           config.ruler.element.info.className = "rulermode-info";
+          /*  */
           document.body.appendChild(config.ruler.element.info);
         }
-      },
-      "keydown": function (e) {
-        e.stopPropagation();
-        if (e.cancelable) e.preventDefault();
-        /*  */
-        if (e.key === "Escape") background.send("escape", {"state": "OFF"});
-        /*  */
-        if (e.key === "ArrowUp") config.ruler.input.move({"stepX": 0, "stepY": -1, "type": "keydown"});
-        if (e.key === "ArrowDown") config.ruler.input.move({"stepX": 0, "stepY": +1, "type": "keydown"});
-        if (e.key === "ArrowLeft") config.ruler.input.move({"stepX": -1, "stepY": 0, "type": "keydown"});
-        if (e.key === "ArrowRight") config.ruler.input.move({"stepX": +1, "stepY": 0, "type": "keydown"});
       },
       "hide": function () {
         config.ruler.info.remove();
         /*  */
         if (config.ruler.element.rect) config.ruler.element.rect.remove();
+        if (config.ruler.element.circle) config.ruler.element.circle.remove();
         if (config.ruler.element.container) config.ruler.element.container.remove();
         /*  */
         document.removeEventListener("mouseup", config.ruler.input.end);
@@ -107,6 +146,7 @@ if (!background) {
         document.removeEventListener("touchstart", config.ruler.input.init);
         /*  */
         document.documentElement.removeAttribute("rulermode");
+        window.removeEventListener("scroll", config.action.scroll);
         document.removeEventListener("keydown", config.ruler.keydown);
       },
       "show": function () {
@@ -124,6 +164,7 @@ if (!background) {
           document.addEventListener("touchstart", config.ruler.input.init);
           /*  */
           document.documentElement.setAttribute("rulermode", '');
+          window.addEventListener("scroll", config.action.scroll);
           document.addEventListener("keydown", config.ruler.keydown);
         }
       },
@@ -143,6 +184,13 @@ if (!background) {
           config.ruler.element.rect.textContent = '';
           config.ruler.element.rect.style.borderWidth = 0;
           /*  */
+          config.ruler.element.circle.style.width = 0;
+          config.ruler.element.circle.style.height = 0;
+          config.ruler.element.circle.textContent = '';
+          config.ruler.element.circle.style.borderWidth = 0;
+          /*  */
+          config.page.scroll.x = window.scrollX;
+          config.page.scroll.y = window.scrollY;
           config.ruler.scroll.y = document.body.scrollTop;
           config.ruler.scroll.x = document.body.scrollLeft;
           config.ruler.start.x = (e.type === "touchstart" || e.type === "mousedown") ? (e.type.startsWith("mouse") ? e.clientX : (e.type.startsWith("touch") ? e.touches[0].clientX : 0)) : config.ruler.current.x + e.stepX;
@@ -151,201 +199,124 @@ if (!background) {
         "move": function (e) {
           if (e.cancelable) e.preventDefault();
           /*  */
-          let action = e.type === "keydown" || (config.ruler.active && (e.type === "touchmove" || e.type === "mousemove"));
+          const action = e.type === "keydown" || (config.ruler.active && (e.type === "touchmove" || e.type === "mousemove"));
           if (action) {
-            if (config.ruler.element.rect) {
+            if (config.ruler.element.rect && config.ruler.element.circle) {
+              const args = {
+                "top": 0,
+                "left": 0,
+                "text": {},
+                "width": 0,
+                "height": 0,
+                "center": {},
+                "metrics": {},
+                "inrange": {},
+                "placement": ''
+              };
+              /*  */
+              args.text.width = 110;
+              args.text.height = 32;
+              args.text.spacing = 3;
+              args.text.adjustment = 1;
+              /*  */
+              args.center.condition = {};
+              args.center.container = {};
+              args.center.placement = {};
+              /*  */
+              args.text.a = document.createElement("div");
+              args.text.b = document.createElement("div");
+              args.text.c = document.createElement("div");
+              args.text.d = document.createElement("div");
+              args.text.e = document.createElement("div");
+              args.text.f = document.createElement("div");
+              /*  */
+              config.ruler.element.rect.style.display = "none";
+              config.ruler.element.circle.style.display = "none";
               config.ruler.element.rect.removeAttribute("visible");
-              config.ruler.element.rect.removeAttribute("colorful");
+              config.ruler.element.rect.removeAttribute("position");
+              config.ruler.element.rect.removeAttribute("placement");
+              config.ruler.element.circle.removeAttribute("visible");
+              config.ruler.element.circle.removeAttribute("placement");
+              config.ruler.element.rect.style.backgroundImage = "unset";
+              config.ruler.element.circle.style.backgroundImage = "unset";
               /*  */
               config.ruler.current.x = (e.type === "touchmove" || e.type === "mousemove") ? (e.type.startsWith("mouse") ? e.clientX : (e.type.startsWith("touch") ? e.touches[0].clientX : 0)) : config.ruler.current.x + e.stepX;
               config.ruler.current.y = (e.type === "touchmove" || e.type === "mousemove") ? (e.type.startsWith("mouse") ? e.clientY : (e.type.startsWith("touch") ? e.touches[0].clientY : 0)) : config.ruler.current.y + e.stepY;
-              /*  */
               config.ruler.width = Math.abs(config.ruler.start.x - config.ruler.current.x);
               config.ruler.height = Math.abs(config.ruler.start.y - config.ruler.current.y);
+              config.ruler.radius = Math.sqrt(config.ruler.width ** 2 + config.ruler.height ** 2);
               /*  */
-              let text = {};
-              let inrange = {};
-              let width = config.ruler.width;
-              let height = config.ruler.height;
-              let top = config.ruler.scroll.y + (config.ruler.current.y < config.ruler.start.y ? config.ruler.current.y : config.ruler.start.y);
-              let left = config.ruler.scroll.x + (config.ruler.current.x < config.ruler.start.x ? config.ruler.current.x : config.ruler.start.x);
+              args.inrange.sx = (config.ruler.start.x > (args.text.width + args.text.spacing)) && (config.ruler.current.x > (args.text.width + args.text.spacing));
+              args.inrange.sy = (config.ruler.start.y > (args.text.height * 2 + args.text.spacing)) && (config.ruler.current.y > (args.text.height * 2 + args.text.spacing));
+              args.inrange.ex = (config.ruler.start.x < (window.innerWidth - (args.text.width + args.text.spacing))) && (config.ruler.current.x < (window.innerWidth - (args.text.width + args.text.spacing)));
+              args.inrange.ey = (config.ruler.start.y < (window.innerHeight - (args.text.height * 2 + args.text.spacing))) && (config.ruler.current.y < (window.innerHeight - (args.text.height * 2 + args.text.spacing)));
               /*  */
-              text.width = 110;
-              text.height = 32;
-              text.spacing = 3;
-              text.adjustment = 1;
+              args.width = config.ruler.width;
+              args.height = config.ruler.height;
+              args.top = config.ruler.scroll.y + (config.ruler.current.y < config.ruler.start.y ? config.ruler.current.y : config.ruler.start.y);
+              args.left = config.ruler.scroll.x + (config.ruler.current.x < config.ruler.start.x ? config.ruler.current.x : config.ruler.start.x);
+              args.placement = config.options.colorful ? "colorful" : (config.options.grayscale ? "grayscale" : (config.options.circular ? "circular" : (config.options.linear ? "linear" : "default")));
               /*  */
-              config.ruler.element.rect.style.top = top + "px";
-              config.ruler.element.rect.style.left = left + "px";
-              config.ruler.element.rect.style.width = width + "px";
-              config.ruler.element.rect.style.height = height + "px";
+              args.center.container.x = (config.ruler.start.x + config.ruler.current.x) / 2;
+              args.center.container.y = (config.ruler.start.y + config.ruler.current.y) / 2;
+              args.center.condition.w = args.width > (args.text.width * 2 + 2 * args.text.adjustment);
+              args.center.condition.h = args.height > (args.text.height * 3 + 4 * args.text.adjustment);
+              args.center.placement.x = args.center.condition.w && args.center.condition.h ? args.center.container.x - args.text.width - args.text.spacing : (args.center.container.x + (window.innerWidth / 2 - args.text.width - args.text.spacing)) / 2;
+              args.center.placement.y = args.center.condition.w && args.center.condition.h ? args.center.container.y - (args.text.height * 3) / 2 - args.text.spacing : (args.center.container.y + (window.innerHeight / 2 - (args.text.height * 3) / 2 - args.text.spacing)) / 2;
+              /*  */
+              args.metrics.a = (args.width + args.text.width) + "px";
+              args.metrics.b = (args.height + args.text.height) + "px";
+              args.metrics.c = (args.width - args.text.adjustment) + "px";
+              args.metrics.d = (args.height - args.text.adjustment) + "px";
+              args.metrics.e = (args.text.width + args.text.adjustment) + "px";
+              args.metrics.f = (args.text.height + args.text.adjustment) + "px";
+              args.metrics.g = -1 * (args.text.width + args.text.spacing) + "px";
+              args.metrics.h = -1 * (args.text.height + args.text.spacing) + "px";
+              args.metrics.i = (args.width - args.text.spacing - args.text.width) + "px";
+              args.metrics.j = -1 * (args.text.height + args.text.adjustment) + "px";
+              args.metrics.k = (args.width + args.text.width + args.text.adjustment) + "px";
+              args.metrics.l = (args.height + args.text.height - args.text.adjustment) + "px";
+              args.metrics.m = (args.height - args.text.height * 1 - args.text.spacing) + "px";
+              args.metrics.n = (args.height - args.text.height * 2 - args.text.spacing) + "px";
+              args.metrics.o = (args.height - args.text.height * 3 - args.text.spacing) + "px";
+              args.metrics.p = (args.height - args.text.height * 4 - args.text.spacing) + "px";
+              args.metrics.q = (args.height + args.text.height * 2 - args.text.adjustment) + "px";
+              args.metrics.r = (args.height + args.text.height * 2 + args.text.adjustment) + "px";
+              args.metrics.s = (args.height - args.text.height * 3 - args.text.adjustment) + "px";
+              args.metrics.t = (args.height + args.text.height * 3 - args.text.adjustment) + "px";
+              args.metrics.u = (args.height - args.text.height * 1 - args.text.adjustment) + "px";
+              args.metrics.v = (args.height - args.text.height * 2 - args.text.adjustment) + "px";
+              args.metrics.w = (args.width / 2 - (args.text.width / 2) - args.text.adjustment) + "px";
+              args.metrics.x = (args.width - args.text.width - args.text.spacing - args.text.adjustment) + "px";
+              args.metrics.y = (args.height / 2 - (args.text.height / 2) - 2 * args.text.adjustment) + "px";
+              args.metrics.z = (args.height - args.text.height - args.text.spacing - args.text.adjustment) + "px";
+              args.metrics.aa = (args.height - args.text.height * 1 - args.text.spacing - args.text.adjustment) + "px";
+              args.metrics.bb = (args.height - args.text.height * 2 - args.text.spacing - args.text.adjustment) + "px";
+              /*  */
+              config.ruler.element.circle.style.borderWidth = "1px";
+              config.ruler.element.circle.setAttribute("placement", args.placement);
+              config.ruler.element.circle.style.width = (2 * config.ruler.radius) + "px";
+              config.ruler.element.circle.style.height = (2 * config.ruler.radius) + "px";
+              config.ruler.element.circle.style.top = (config.ruler.scroll.y + (config.ruler.start.y - config.ruler.radius)) + "px";
+              config.ruler.element.circle.style.left = (config.ruler.scroll.x + (config.ruler.start.x - config.ruler.radius)) + "px";
+              /*  */
               config.ruler.element.rect.style.borderWidth = "1px";
+              config.ruler.element.rect.style.width = args.width + "px";
+              config.ruler.element.rect.style.height = args.height + "px";
+              config.ruler.element.rect.setAttribute("placement", args.placement);
+              config.ruler.element.rect.style.top = (config.ruler.scroll.y + (config.ruler.current.y < config.ruler.start.y ? config.ruler.current.y : config.ruler.start.y)) + "px";
+              config.ruler.element.rect.style.left = (config.ruler.scroll.x + (config.ruler.current.x < config.ruler.start.x ? config.ruler.current.x : config.ruler.start.x)) + "px";
               /*  */
-              text.a = document.createElement("div");
-              text.b = document.createElement("div");
-              text.c = document.createElement("div");
-              text.d = document.createElement("div");
-              text.e = document.createElement("div");
-              text.f = document.createElement("div");
-              /*  */
-              config.ruler.element.rect.setAttribute("colorful", config.options.colorful);
-              /*  */
-              if (config.options.colorful) {
-                let center = {};
-                /*  */
-                center.condition = {};
-                center.container = {};
-                center.placement = {};
-                /*  */
-                inrange.sx = config.ruler.start.x > (text.width + text.spacing);
-                inrange.sy = config.ruler.start.y > (text.height + text.spacing);
-                inrange.ex = (config.ruler.current.x < (window.innerWidth - (text.width * 1)));
-                inrange.ey = (config.ruler.current.y < (window.innerHeight - (text.height * 1)));
-                /*  */
-                center.condition.w = width > (text.width * 2 + 2 * text.adjustment);
-                center.condition.h = height > (text.height * 3 + 4 * text.adjustment);
-                center.container.x = (config.ruler.start.x + config.ruler.current.x) / 2;
-                center.container.y = (config.ruler.start.y + config.ruler.current.y) / 2;
-                center.placement.x = center.condition.w && center.condition.h ? center.container.x - text.width - text.spacing : (center.container.x + (window.innerWidth / 2 - text.width - text.spacing)) / 2;
-                center.placement.y = center.condition.w && center.condition.h ? center.container.y - (text.height * 3) / 2 - text.spacing : (center.container.y + (window.innerHeight / 2 - (text.height * 3) / 2 - text.spacing)) / 2;
-                /*  */
-                const cond_0 = inrange.sx && inrange.sy && inrange.ex && inrange.ey;
-                const cond_1 = width * height > 2 * text.width * text.height;
-                const cond_2 = width > (2 * text.width) && (height > (text.height + 2 * text.adjustment));
-                const cond_3 = height > (2 * text.height) && (width > (text.width + 2 * text.adjustment));
-                const visible = cond_0 && cond_1 && (cond_2 || cond_3);
-                /*  */
-                text.c.setAttribute("box", '');
-                text.d.setAttribute("box", '');
-                text.e.setAttribute("end", '');
-                text.f.setAttribute("end", '');
-                text.a.setAttribute("start", '');
-                text.b.setAttribute("start", '');
-                config.ruler.element.rect.setAttribute("visible", visible);
-                /*  */
-                text.a.textContent = "(y) " + top + "px";
-                text.b.textContent = "(x) " + left + "px";
-                text.c.textContent = "(w) " + width + "px";
-                text.d.textContent = "(h) " + height + "px";
-                text.e.textContent = "(x) " + (left + width) + "px";
-                text.f.textContent = "(y) " + (top + height) + "px";
-                /*  */
-                text.a.style.left = visible ? 0 : (center.placement.x + text.width + text.spacing) + "px";
-                text.a.style.top = visible ? -1 * (text.height + text.spacing) + "px" : (center.placement.y) + "px";
-                /*  */
-                text.b.style.left = visible ? -1 * (text.width + text.spacing) + "px" : (center.placement.x) + "px";
-                text.b.style.top = visible ? 0 : (center.placement.y) + "px";
-                /*  */
-                text.c.style.left = visible ? (width / 2 - (text.width / 2) - 2 * text.adjustment) + "px" : (center.placement.x) + "px";
-                text.c.style.top = visible ? 0 : (center.placement.y + 1 * (text.height + text.spacing)) + "px";
-                /*  */
-                text.d.style.left = visible ? 0 : (center.placement.x + text.width + text.spacing) + "px";
-                text.d.style.top = visible ? (height / 2 - (text.height / 2) - 2 * text.adjustment) + "px" : (center.placement.y + 1 * (text.height + text.spacing)) + "px";
-                /*  */
-                text.e.style.left = visible ? (width - text.adjustment) + "px" : (center.placement.x) + "px";
-                text.e.style.top = visible ? (height - (text.height + text.spacing + text.adjustment)) + "px" : (center.placement.y + 2 * (text.height + text.spacing)) + "px";
-                /*  */
-                text.f.style.left = visible ? (width - (text.width + text.spacing + text.adjustment)) + "px" : (center.placement.x + text.width + text.spacing) + "px";
-                text.f.style.top = visible ? (height - text.adjustment) + "px" : (center.placement.y + 2 * (text.height + text.spacing)) + "px";
-                /*  */
-                config.ruler.element.rect.textContent = '';
-                config.ruler.element.section.textContent = '';
-                /*  */
-                if (visible) {
-                  config.ruler.element.rect.appendChild(text.a);
-                  config.ruler.element.rect.appendChild(text.b);
-                  config.ruler.element.rect.appendChild(text.c);
-                  config.ruler.element.rect.appendChild(text.d);
-                  config.ruler.element.rect.appendChild(text.e);
-                  config.ruler.element.rect.appendChild(text.f);
-                } else {
-                  config.ruler.element.section.appendChild(text.a);
-                  config.ruler.element.section.appendChild(text.b);
-                  config.ruler.element.section.appendChild(text.c);
-                  config.ruler.element.section.appendChild(text.d);
-                  config.ruler.element.section.appendChild(text.e);
-                  config.ruler.element.section.appendChild(text.f);
-                  /*  */
-                  config.ruler.element.section.style.top = text.b.style.top;
-                  config.ruler.element.section.style.left = text.b.style.left;
-                  config.ruler.element.section.style.width = (text.width * 2 + text.spacing + text.adjustment + 1) + "px";
-                  config.ruler.element.section.style.height = (text.height * 3 + 2 * text.spacing + text.adjustment + 1) + "px";
-                  /*  */
-                  config.ruler.element.rect.appendChild(config.ruler.element.section);
-                }
+              if (config.options.grayscale) {
+                config.render.grayscale(args);
+              } else if (config.options.colorful) {
+                config.render.colorful(args);
+              } else if (config.options.circular) {
+                config.render.circular(args);
+              } else if (config.options.linear) {
+                config.render.linear(args);
               } else {
-                const metrics = {};
-                const cond_1 = width * height > 2 * text.width * text.height;
-                const cond_2 = width > (2 * text.width) && (height > (text.height + 2 * text.adjustment));
-                const cond_3 = height > (2 * text.height) && (width > (text.width + 2 * text.adjustment));
-                const visible = cond_1 && (cond_2 || cond_3);
                 /*  */
-                text.a.textContent = "(y) " + top + "px";
-                text.b.textContent = "(x) " + left + "px";
-                text.c.textContent = "(w) " + width + "px";
-                text.d.textContent = "(h) " + height + "px";
-                text.e.textContent = "(x) " + (left + width) + "px";
-                text.f.textContent = "(y) " + (top + height) + "px";
-                /*  */
-                inrange.sx = config.ruler.start.x > (text.width + text.spacing);
-                inrange.sy = config.ruler.start.y > (text.height + text.spacing);
-                inrange.ex = (config.ruler.current.x < (window.innerWidth - (text.width * 2)));
-                inrange.ey = (config.ruler.current.y < (window.innerHeight - (text.height * 4)));
-                /*  */
-                metrics.a = (width + text.width) + "px";
-                metrics.b = (height + text.height) + "px";
-                metrics.c = (width - text.adjustment) + "px";
-                metrics.d = (height - text.adjustment) + "px";
-                metrics.e = (text.width + text.adjustment) + "px";
-                metrics.f = (text.height + text.adjustment) + "px";
-                metrics.g = -1 * (text.width + text.spacing) + "px";
-                metrics.h = -1 * (text.height + text.spacing) + "px";
-                metrics.i = (width - text.spacing - text.width) + "px";
-                metrics.j = -1 * (text.height + text.adjustment) + "px";
-                metrics.k = (width + text.width + text.adjustment) + "px";
-                metrics.l = (height + text.height - text.adjustment) + "px";
-                metrics.m = (height - text.height * 1 - text.spacing) + "px";
-                metrics.n = (height - text.height * 2 - text.spacing) + "px";
-                metrics.o = (height - text.height * 3 - text.spacing) + "px";
-                metrics.p = (height - text.height * 4 - text.spacing) + "px";
-                metrics.q = (height + text.height * 2 - text.adjustment) + "px";
-                metrics.r = (height + text.height * 2 + text.adjustment) + "px";
-                metrics.s = (height - text.height * 3 - text.adjustment) + "px";
-                metrics.t = (height + text.height * 3 - text.adjustment) + "px";
-                metrics.u = (height - text.height * 1 - text.adjustment) + "px";
-                metrics.v = (height - text.height * 2 - text.adjustment) + "px";
-                metrics.w = (width / 2 - (text.width / 2) - text.adjustment) + "px";
-                metrics.x = (width - text.width - text.spacing - text.adjustment) + "px";
-                metrics.y = (height / 2 - (text.height / 2) - 2 * text.adjustment) + "px";
-                metrics.z = (height - text.height - text.spacing - text.adjustment) + "px";
-                metrics.aa = (height - text.height * 1 - text.spacing - text.adjustment) + "px";
-                metrics.bb = (height - text.height * 2 - text.spacing - text.adjustment) + "px";
-                /*  */
-                text.a.style.left = inrange.ex ? (inrange.sy ? (inrange.sx ? 0 : metrics.e) : (inrange.sx ? metrics.g : (visible ? 0 : metrics.a))) : (inrange.sx ? metrics.g : metrics.e);
-                text.a.style.top = inrange.ex ? (inrange.sy ? metrics.h : (inrange.sx ? metrics.f : (visible ? (inrange.ey ? metrics.r : metrics.aa) : (inrange.ey ? metrics.u : metrics.s)))) : (inrange.sx ? (inrange.sy ? 0 : metrics.f) : (inrange.sy ? metrics.h : 0));
-                /*  */
-                text.b.style.left = inrange.sx ? metrics.g : (inrange.sy ? 0 : (inrange.ex ? (visible ? 0 : metrics.c) : 0));
-                text.b.style.top = inrange.ex ? (inrange.sx ? 0 : (inrange.sy ? metrics.h : (visible ? (inrange.ey ? metrics.b : metrics.bb) : (inrange.ey ? metrics.u : metrics.s)))) : (inrange.sx ? (inrange.sy ? metrics.j : 0) : (inrange.sy ? metrics.h : 0));
-                /*  */
-                text.c.style.left = inrange.ex ? (visible ? metrics.w : metrics.c) : metrics.i;
-                text.c.style.top = inrange.ex ? (visible ? 0 : (inrange.ey ? metrics.b : metrics.v)) : (inrange.ey ? metrics.q : metrics.p);
-                /*  */
-                text.d.style.left = inrange.ex ? (visible ? 0 : metrics.a) : metrics.i;
-                text.d.style.top = inrange.ex ? (visible ? metrics.y : (inrange.ey ? metrics.b : metrics.v)) : (inrange.ey ? metrics.t : metrics.o);
-                /*  */
-                text.e.style.left = inrange.ex ? (visible ? metrics.c : metrics.c) : metrics.i;
-                text.e.style.top = inrange.ex ? (visible ? metrics.z : (inrange.ey ? metrics.d : metrics.u)) : (inrange.ey ? metrics.d : metrics.n);
-                /*  */
-                text.f.style.left = inrange.ex ? (visible ? (inrange.ey ? metrics.x : metrics.k) : metrics.a) : metrics.i;
-                text.f.style.top = inrange.ex ? (visible ? (inrange.ey ? metrics.d : metrics.z) : (inrange.ey ? metrics.d : metrics.u)) : (inrange.ey ? metrics.l : metrics.m);
-                /*  */
-                config.ruler.element.rect.textContent = '';
-                config.ruler.element.rect.appendChild(text.a);
-                config.ruler.element.rect.appendChild(text.b);
-                config.ruler.element.rect.appendChild(text.c);
-                config.ruler.element.rect.appendChild(text.d);
-                config.ruler.element.rect.appendChild(text.e);
-                config.ruler.element.rect.appendChild(text.f);
               }
             }
           }
@@ -354,11 +325,6 @@ if (!background) {
     }
   };
   /*  */
-  background.receive("colorful", function (e) {
-    config.options.colorful = e.colorful;
-  });
-  /*  */
-  background.receive("rulermode", function (e) {
-    config.ruler[e.state === "ON" ? "show" : "hide"]();
-  });
+  background.receive("rulermode", config.action.rulermode);
+  background.receive("placement", config.action.placement);
 }

@@ -30,23 +30,76 @@ var background = (function () {
 
 var config = {
   "render": function (e) {
+    const scroll = document.getElementById("scroll");
+    const linear = document.getElementById("linear");
     const colorful = document.getElementById("colorful");
+    const circular = document.getElementById("circular");
     const grayscale = document.getElementById("grayscale");
+    const placement = e.colorful ? "colorful" : (e.grayscale ? "grayscale" : (e.circular ? "circular" : (e.linear ? "linear" : "default")));
     /*  */
-    document.documentElement.setAttribute("colorful", e.colorful);
-    grayscale.checked = !e.colorful;
+    scroll.checked = e.scroll;
+    linear.checked = e.linear;
     colorful.checked = e.colorful;
+    circular.checked = e.circular;
+    grayscale.checked = e.grayscale;
+    /*  */
+    document.documentElement.setAttribute("placement", placement);
   },
   "load": function () {
+    const scroll = document.getElementById("scroll");
+    const linear = document.getElementById("linear");
     const colorful = document.getElementById("colorful");
+    const circular = document.getElementById("circular");
     const grayscale = document.getElementById("grayscale");
     /*  */
+    scroll.addEventListener("change", function (e) {
+      background.send("store", {
+        "scroll": e.target.checked,
+        "linear": linear.checked,
+        "colorful": colorful.checked,
+        "circular": circular.checked,
+        "grayscale": grayscale.checked
+      });
+    });
+    /*  */
     colorful.addEventListener("change", function (e) {
-      background.send("colorful", e.target.checked);
+      background.send("store", {
+        "scroll": scroll.checked,
+        "linear": !e.target.checked,
+        "colorful": e.target.checked,
+        "circular": !e.target.checked,
+        "grayscale": !e.target.checked
+      });
     });
     /*  */
     grayscale.addEventListener("change", function (e) {
-      background.send("colorful", !e.target.checked);
+      background.send("store", {
+        "scroll": scroll.checked,
+        "linear": !e.target.checked,
+        "colorful": !e.target.checked,
+        "circular": !e.target.checked,
+        "grayscale": e.target.checked
+      });
+    });
+    /*  */
+    circular.addEventListener("change", function (e) {
+      background.send("store", {
+        "scroll": scroll.checked,
+        "linear": !e.target.checked,
+        "circular": e.target.checked,
+        "colorful": !e.target.checked,
+        "grayscale": !e.target.checked
+      });
+    });
+    /*  */
+    linear.addEventListener("change", function (e) {
+      background.send("store", {
+        "scroll": scroll.checked,
+        "linear": e.target.checked,
+        "circular": !e.target.checked,
+        "colorful": !e.target.checked,
+        "grayscale": !e.target.checked
+      });
     });
     /*  */
     background.send("load");
@@ -54,4 +107,5 @@ var config = {
 };
 
 background.receive("storage", config.render);
+
 window.addEventListener("load", config.load, false);

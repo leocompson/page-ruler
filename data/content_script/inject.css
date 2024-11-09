@@ -25,13 +25,12 @@ html[rulermode] * {
   background-position: 0 -1px, -1px 0, 0 0, 0 0;
 }
 
-.rulermode-rectangle {
+.rulermode-circle, .rulermode-rectangle {
   border-width: 0;
   margin: 0 !important;
   padding: 0 !important;
   direction: ltr !important;
   position: fixed !important;
-  border-radius: 0 !important;
   box-shadow: none !important;
   cursor: crosshair !important;
   text-shadow: none !important;
@@ -42,23 +41,46 @@ html[rulermode] * {
   background-color: rgb(245 196 0 / 15%) !important;
 }
 
+.rulermode-rectangle {
+  border-radius: 0 !important;
+}
+
+.rulermode-circle {
+  border-radius: 50% !important;
+}
+
+.rulermode-circle[visible='false'] div,
 .rulermode-rectangle[visible='false'] div {
   position: fixed !important;
 }
 
+.rulermode-circle div[box],
 .rulermode-rectangle div[box] {
   background-color: #f5c40080 !important;
 }
 
+.rulermode-circle[placement='linear'] div[box],
+.rulermode-rectangle[placement='linear'] div[box] {
+  background-color: #f9e07f !important;
+}
+
+.rulermode-circle div[end],
 .rulermode-rectangle div[end] {
   background-color: #00cf1b80 !important;
 }
 
+.rulermode-circle div[start],
 .rulermode-rectangle div[start] {
   background-color: #4da6ff80 !important;
 }
 
-.rulermode-rectangle[visible='false']:before {
+.rulermode-rectangle[placement='linear'],
+.rulermode-rectangle[placement='circular'] {
+  border-width: 0 !important;
+  background-color: unset !important;
+}
+
+.rulermode-rectangle[placement='colorful']:before {
   top: -1px !important;
   z-index: 1 !important;
   width: 8px !important;
@@ -71,19 +93,20 @@ html[rulermode] * {
   transform: translate(50%, -50%) !important;
 }
 
-.rulermode-rectangle[visible='false']:after {
+.rulermode-rectangle[placement='colorful']:after {
   top: 100% !important;
   z-index: 1 !important;
   width: 8px !important;
-  right: -1px !important;
   height: 8px !important;
   content: "" !important;
+  right: -1px !important;
   border-radius: 50% !important;
   position: absolute !important;
   background: #00cf1b !important;
   transform: translate(50%, -50%) !important;
 }
 
+.rulermode-circle section,
 .rulermode-rectangle section {
   text-align: center;
   margin: 0 !important;
@@ -105,6 +128,13 @@ html[rulermode] * {
   outline: solid 5px #fff !important;
 }
 
+.rulermode-circle[placement='circular'] section,
+.rulermode-rectangle[placement='circular'] section {
+  background-color: rgba(245, 196, 0, 0.15) !important;
+  outline: solid 5px rgba(245, 196, 0, 0.15) !important;
+}
+
+.rulermode-circle div,
 .rulermode-rectangle div {
   text-align: center;
   margin: 1px !important;
@@ -142,14 +172,14 @@ html[rulermode] * {
   border: 0 !important;
   opacity: 1 !important;
   color: #333 !important;
-  width: 120px !important;
+  width: 128px !important;
   outline: none !important;
   display: block !important;
   direction: ltr !important;
   position: fixed !important;
   font-size: 11px !important;
-  max-width: 120px !important;
-  min-width: 120px !important;
+  max-width: 128px !important;
+  min-width: 128px !important;
   box-shadow: none !important;
   border-radius: 0 !important;
   user-select: none !important;
@@ -174,6 +204,7 @@ html[rulermode] * {
 
 @-moz-document url-prefix() {
   .rulermode-info,
+  .rulermode-circle div,
   .rulermode-rectangle div {
     font-family: monaco, "andale mono", "lucida console", "courier new", monospace !important;
   }
