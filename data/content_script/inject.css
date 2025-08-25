@@ -75,6 +75,7 @@ html[rulermode] * {
 }
 
 .rulermode-rectangle[placement='linear'],
+.rulermode-rectangle[placement='angular'],
 .rulermode-rectangle[placement='circular'] {
   border-width: 0 !important;
   background-color: unset !important;

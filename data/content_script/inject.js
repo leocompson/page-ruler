@@ -40,6 +40,7 @@ if (!background) {
     "options": {
       "scroll": false,
       "linear": false,
+      "angular": false,
       "colorful": false,
       "circular": false,
       "grayscale": true
@@ -51,6 +52,7 @@ if (!background) {
       "placement": function (e) {
         config.options.scroll = e.scroll;
         config.options.linear = e.linear;
+        config.options.angular = e.angular;
         config.options.colorful = e.colorful;
         config.options.circular = e.circular;
         config.options.grayscale = e.grayscale;
@@ -255,7 +257,7 @@ if (!background) {
               args.height = config.ruler.height;
               args.top = config.ruler.scroll.y + (config.ruler.current.y < config.ruler.start.y ? config.ruler.current.y : config.ruler.start.y);
               args.left = config.ruler.scroll.x + (config.ruler.current.x < config.ruler.start.x ? config.ruler.current.x : config.ruler.start.x);
-              args.placement = config.options.colorful ? "colorful" : (config.options.grayscale ? "grayscale" : (config.options.circular ? "circular" : (config.options.linear ? "linear" : "default")));
+              args.placement = config.options.colorful ? "colorful" : (config.options.grayscale ? "grayscale" : (config.options.circular ? "circular" : (config.options.linear ? "linear" : (config.options.angular ? "angular" : "default"))));
               /*  */
               args.center.container.x = (config.ruler.start.x + config.ruler.current.x) / 2;
               args.center.container.y = (config.ruler.start.y + config.ruler.current.y) / 2;
@@ -292,6 +294,7 @@ if (!background) {
               args.metrics.z = (args.height - args.text.height - args.text.spacing - args.text.adjustment) + "px";
               args.metrics.aa = (args.height - args.text.height * 1 - args.text.spacing - args.text.adjustment) + "px";
               args.metrics.bb = (args.height - args.text.height * 2 - args.text.spacing - args.text.adjustment) + "px";
+              args.metrics.cc = (args.height / 2 - (args.text.height / 2) - args.text.height - 2 * args.text.adjustment) + "px";
               /*  */
               config.ruler.element.circle.style.borderWidth = "1px";
               config.ruler.element.circle.setAttribute("placement", args.placement);
@@ -313,6 +316,8 @@ if (!background) {
                 config.render.colorful(args);
               } else if (config.options.circular) {
                 config.render.circular(args);
+              } else if (config.options.angular) {
+                config.render.angular(args);
               } else if (config.options.linear) {
                 config.render.linear(args);
               } else {

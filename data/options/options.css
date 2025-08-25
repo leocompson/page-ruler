@@ -111,6 +111,7 @@ table tr[class="header"] {
 }
 
 table tr:has(#linear),
+table tr:has(#angular),
 table tr:has(#colorful),
 table tr:has(#circular),
 table tr:has(#grayscale) {
@@ -123,6 +124,10 @@ html[placement='default'] table tr {
 }
 
 html[placement='linear'] table tr:has(#linear) {
+  outline: solid 2px #f5c400;
+}
+
+html[placement='angular'] table tr:has(#angular) {
   outline: solid 2px #f5c400;
 }
 
@@ -140,6 +145,8 @@ html[placement='grayscale'] table tr:has(#grayscale) {
 
 .linear-1 {background: url('images/linear-1.png') no-repeat 100% center}
 .linear-2 {background: url('images/linear-2.png') no-repeat 100% center}
+.angular-1 {background: url('images/angular-1.png') no-repeat 100% center}
+.angular-2 {background: url('images/angular-2.png') no-repeat 100% center}
 .colorful-1 {background: url('images/colorful-1.png') no-repeat 100% center}
 .colorful-2 {background: url('images/colorful-2.png') no-repeat 100% center}
 .circular-1 {background: url('images/circular-1.png') no-repeat 100% center}
@@ -153,9 +160,76 @@ html[placement='grayscale'] table tr:has(#grayscale) {
   padding: 0;
 }
 
+.toolbar {
+  top: 0;
+  left: 0;
+  z-index: 11;
+  width: 42px;
+  position: fixed;
+}
+
+.toolbar table {
+  width: 100%;
+  border-spacing: 0;
+  table-layout: fixed;
+}
+
+.toolbar table tr td {
+  padding: 0;
+  width: 100%;
+  height: 42px;
+  cursor: pointer;
+  user-select: none;
+  text-align: center;
+  transition: 300ms ease background-color;
+}
+
+.toolbar table tr td:hover {
+  background-color: rgba(0,0,0,0.05);
+}
+
+.toolbar table tr td svg {
+  fill: #555;
+  pointer-events: none;
+  vertical-align: middle;
+}
+
 .logo {
   width: 100%;
   height: 128px;
   background: url('../icons/128.png') no-repeat center center;
   background-size: 64px;
+}
+
+html[theme='dark'], 
+html[theme='dark'] body {
+  color: #ebebeb;
+  color-scheme: dark;
+  background-color: #1e1e1e;
+}
+
+html[theme='dark'] table tr[class="header"] {
+  background-color: #333333;
+}
+
+html[theme='dark'] .toolbar table tr td:hover {
+  background-color: rgb(255 255 255 / 10%);
+}
+
+html[theme='dark'] table tr td label,
+html[theme='dark'] table.settings tr td.note,
+html[theme='dark'] table tr[class="header"] td {
+  color: #ebebeb;
+}
+
+html[theme='dark'] table tr td label {
+  border-color: rgb(255 255 255 / 25%);
+}
+
+html[theme='dark'] .toolbar table tr td svg {
+  fill: #ebebeb;
+}
+
+html[theme='dark'] table.metrics tr td[class] {
+  filter: brightness(0.9);
 }
