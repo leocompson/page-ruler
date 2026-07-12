@@ -164,7 +164,7 @@ config.render = {
     /*  */
     svg.element = `
       <svg xmlns="http://www.w3.org/2000/svg" width="${Math.abs(svg.x2 - svg.x1)}" height="${Math.abs(svg.y2 - svg.y1)}">
-        <line x1="${svg.x1}" y1="${svg.y1}" x2="${svg.x2}" y2="${svg.y2}" stroke="rgb(0 0 0 / 50%)" stroke-width="2"/>
+        <line x1="${svg.x1}" y1="${svg.y1}" x2="${svg.x2}" y2="${svg.y2}" stroke="${config.ruler.stroke.color}" stroke-width="2"/>
       </svg>
     `;
     /*  */
@@ -733,10 +733,10 @@ config.render = {
     text.angle.textContent = "(∠) " + Math.round(svg.arc.angle * 180 / Math.PI) + "°";
     svg.element = `
       <svg xmlns="http://www.w3.org/2000/svg" width="${svg.trianlge.base}" height="${svg.trianlge.height}">
-        <line x1="${svg.x1}" y1="${svg.y1}" x2="${svg.x2}" y2="${svg.y2}" stroke="rgb(0 0 0 / 50%)" stroke-width="2"/>
-        <line x1="${svg.x1}" y1="${circle.top.left ? svg.y2 : svg.y1}" x2="${svg.x2}" y2="${circle.top.left ? svg.y2 : svg.y1}" stroke="rgb(0 0 0 / 50%)" stroke-width="5"/>
-        <line x1="${circle.top.left ? svg.x1 : svg.x2}" y1="${svg.y1}" x2="${circle.top.left ? svg.x1 : svg.x2}" y2="${svg.y2}" stroke="rgb(0 0 0 / 50%)" stroke-width="5"/>
-        <path d="${["M", svg.arc.start.x, svg.arc.start.y, "A", svg.arc.r, svg.arc.r, 0, svg.arc.large, svg.arc.sweep, svg.arc.end.x, svg.arc.end.y].join(" ")}" fill="none" stroke="rgb(0 0 0 / 50%)" stroke-width="3"/>
+        <line x1="${svg.x1}" y1="${svg.y1}" x2="${svg.x2}" y2="${svg.y2}" stroke="${config.ruler.stroke.color}" stroke-width="2"/>
+        <line x1="${svg.x1}" y1="${circle.top.left ? svg.y2 : svg.y1}" x2="${svg.x2}" y2="${circle.top.left ? svg.y2 : svg.y1}" stroke="${config.ruler.stroke.color}" stroke-width="5"/>
+        <line x1="${circle.top.left ? svg.x1 : svg.x2}" y1="${svg.y1}" x2="${circle.top.left ? svg.x1 : svg.x2}" y2="${svg.y2}" stroke="${config.ruler.stroke.color}" stroke-width="5"/>
+        <path d="${["M", svg.arc.start.x, svg.arc.start.y, "A", svg.arc.r, svg.arc.r, 0, svg.arc.large, svg.arc.sweep, svg.arc.end.x, svg.arc.end.y].join(" ")}" fill="none" stroke="${config.ruler.stroke.color}" stroke-width="3"/>
       </svg>
     `;
     /*  */

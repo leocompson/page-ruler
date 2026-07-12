@@ -30,6 +30,7 @@ var background = (function () {
 
 var config = {
   "render": function (e) {    
+    const adjust = document.getElementById("adjust");
     const scroll = document.getElementById("scroll");
     const linear = document.getElementById("linear");
     const angular = document.getElementById("angular");
@@ -39,6 +40,7 @@ var config = {
     const theme = e.theme !== undefined ? e.theme : "light";
     const placement = e.colorful ? "colorful" : (e.grayscale ? "grayscale" : (e.circular ? "circular" : (e.linear ? "linear" : (e.angular ? "angular" : "default"))));
     /*  */
+    adjust.checked = e.adjust;
     scroll.checked = e.scroll;
     linear.checked = e.linear;
     angular.checked = e.angular;
@@ -51,6 +53,7 @@ var config = {
   },
   "load": function () {
     const theme = document.getElementById("theme");
+    const adjust = document.getElementById("adjust");
     const scroll = document.getElementById("scroll");
     const linear = document.getElementById("linear");
     const reload = document.getElementById("reload");
@@ -73,9 +76,22 @@ var config = {
       background.send("theme", attribute);
     });
     /*  */
+    adjust.addEventListener("change", function (e) {
+      background.send("store", {
+        "adjust": e.target.checked,
+        "scroll": scroll.checked,
+        "linear": linear.checked,
+        "angular": angular.checked,
+        "colorful": colorful.checked,
+        "circular": circular.checked,
+        "grayscale": grayscale.checked
+      });
+    });
+    /*  */
     scroll.addEventListener("change", function (e) {
       background.send("store", {
         "scroll": e.target.checked,
+        "adjust": adjust.checked,
         "linear": linear.checked,
         "angular": angular.checked,
         "colorful": colorful.checked,
@@ -87,6 +103,7 @@ var config = {
     colorful.addEventListener("change", function (e) {
       background.send("store", {
         "scroll": scroll.checked,
+        "adjust": adjust.checked,
         "linear": !e.target.checked,
         "colorful": e.target.checked,
         "angular": !e.target.checked,
@@ -98,6 +115,7 @@ var config = {
     grayscale.addEventListener("change", function (e) {
       background.send("store", {
         "scroll": scroll.checked,
+        "adjust": adjust.checked,
         "linear": !e.target.checked,
         "angular": !e.target.checked,
         "colorful": !e.target.checked,
@@ -109,6 +127,7 @@ var config = {
     angular.addEventListener("change", function (e) {
       background.send("store", {
         "scroll": scroll.checked,
+        "adjust": adjust.checked,
         "linear": !e.target.checked,
         "angular": e.target.checked,
         "circular": !e.target.checked,
@@ -120,6 +139,7 @@ var config = {
     circular.addEventListener("change", function (e) {
       background.send("store", {
         "scroll": scroll.checked,
+        "adjust": adjust.checked,
         "linear": !e.target.checked,
         "angular": !e.target.checked,
         "circular": e.target.checked,
@@ -131,6 +151,7 @@ var config = {
     linear.addEventListener("change", function (e) {
       background.send("store", {
         "scroll": scroll.checked,
+        "adjust": adjust.checked,
         "linear": e.target.checked,
         "angular": !e.target.checked,
         "circular": !e.target.checked,

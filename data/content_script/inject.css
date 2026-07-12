@@ -20,7 +20,7 @@ html[rulermode] * {
   z-Index: 2147483644 !important;
   box-sizing: border-box !important;
   background-color: transparent !important;
-  background-image: linear-gradient(rgba(0,0,0,0.05) 1px, transparent 0), linear-gradient(90deg, rgba(0,0,0,0.05) 1px, transparent 0);
+  background-image: linear-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 0), linear-gradient(90deg, rgba(0, 0, 0, 0.05) 1px, transparent 0);
   background-size: 1px 51px, 51px 1px, 0 0, 0 0;
   background-position: 0 -1px, -1px 0, 0 0, 0 0;
 }
@@ -87,7 +87,7 @@ html[rulermode] * {
   width: 8px !important;
   right: 100% !important;
   height: 8px !important;
-  content: "" !important;
+  content: '' !important;
   position: absolute !important;
   border-radius: 50% !important;
   background: #4da6ff !important;
@@ -99,7 +99,7 @@ html[rulermode] * {
   z-index: 1 !important;
   width: 8px !important;
   height: 8px !important;
-  content: "" !important;
+  content: '' !important;
   right: -1px !important;
   border-radius: 50% !important;
   position: absolute !important;
@@ -207,6 +207,6 @@ html[rulermode] * {
   .rulermode-info,
   .rulermode-circle div,
   .rulermode-rectangle div {
-    font-family: monaco, "andale mono", "lucida console", "courier new", monospace !important;
+    font-family: monaco, 'andale mono', 'lucida console', 'courier new', monospace !important;
   }
 }

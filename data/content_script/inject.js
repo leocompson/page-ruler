@@ -31,14 +31,9 @@ if (!background) {
   })();
 
   var config = {
-    "page": {
-      "scroll": {
-        "x": null, 
-        "y": null
-      }
-    },
     "options": {
       "scroll": false,
+      "adjust": true,
       "linear": false,
       "angular": false,
       "colorful": false,
@@ -50,6 +45,7 @@ if (!background) {
         config.ruler[e.state === "ON" ? "show" : "hide"]();
       },
       "placement": function (e) {
+        config.options.adjust = e.adjust;
         config.options.scroll = e.scroll;
         config.options.linear = e.linear;
         config.options.angular = e.angular;
@@ -69,6 +65,48 @@ if (!background) {
         }
       }
     },
+    "page": {
+      "scroll": {
+        "x": null, 
+        "y": null
+      },
+      "is": {
+        "_mediaDark": window.matchMedia("(prefers-color-scheme: dark)"),
+        "dark": function (e) {
+          try {
+            let tmp = document.elementFromPoint(e.clientX, e.clientY);
+            /*  */
+            for (let i = 0; tmp && i < 10; i++, tmp = tmp.parentElement) {
+              const color = window.getComputedStyle(tmp).backgroundColor;
+              if (color !== "rgba(0, 0, 0, 0)" && color !== "transparent") {
+                return config.page.is._dark(color);
+              }
+            }
+            /*  */
+            return config.page.is._dark(null);
+          } catch (e) {
+            return config.page.is._dark(null);
+          }
+        },
+        "_dark": function (e) {
+          try {
+            if (e && typeof e === "string") {
+              const values = e.match(/\d+/g);
+              /*  */
+              if (values && values.length >= 3) {
+                const [r, g, b] = values.map(Number);
+                const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+                return brightness < 128;
+              }
+            }
+            /*  */
+            return config.page.is._mediaDark.matches;
+          } catch (e) {
+            return config.page.is._mediaDark.matches;
+          }
+        }
+      }
+    },
     "ruler": {
       "x": null,
       "y": null,
@@ -79,6 +117,9 @@ if (!background) {
       "action": true,
       "active": false,
       "status": false,
+      "stroke": {
+        "color": null
+      },
       "start": {
         "x": null, 
         "y": null
@@ -178,8 +219,10 @@ if (!background) {
         },
         "init": function (e) {
           if (e.cancelable) e.preventDefault();
+          const flag = config.options.adjust && config.page.is.dark(e);
           /*  */
           config.ruler.active = true;
+          config.ruler.stroke.color = flag ? "rgb(255 255 255 / 50%)" : "rgb(0 0 0 / 50%)";
           /*  */
           config.ruler.element.rect.style.width = 0;
           config.ruler.element.rect.style.height = 0;

@@ -18,7 +18,7 @@
 				</tr>
         <tr>
           <td id="theme" title="Dark | Light mode">
-            <svg width="10" height="10" viewBox="0 0 122.8799 122.8799">
+            <svg width="11" height="11" viewBox="0 0 122.8799 122.8799">
               <path d="M 63.550085,1.4875858 A 60.101027,60.101027 0 0 0 3.45,61.587666 60.101027,60.101027 0 0 0 63.550085,121.6899 60.101027,60.101027 0 0 0 119.56373,83.196612 50.463617,50.463617 0 0 1 102.0998,86.352622 50.463617,50.463617 0 0 1 51.637166,35.887862 50.463617,50.463617 0 0 1 65.189815,1.5691534 60.101027,60.101027 0 0 0 63.550085,1.4875858 Z"/>
             </svg>
           </td>
@@ -42,7 +42,10 @@
     <div class="content">
       <table class="settings">
         <tr class="header">
-          <td>⬤ Settings</td>
+          <td>
+			<span class="icon">⬤</span>
+			<span class="name">Settings</span>
+		  </td>
           <td></td>
           <td colspan="2">Note</td>
         </tr>
@@ -57,10 +60,24 @@
             Move metrics placement as the page scrolls in X or Y directions
           </td>
         </tr>
+        <tr>
+          <td>
+            <label for="scroll">Auto Color Adjustment</label>
+          </td>
+          <td>
+            <input type="checkbox" id="adjust">
+          </td>
+          <td colspan="2" class="note">
+            Auto-adjust line colors for optimal visibility across light and dark pages
+          </td>
+        </tr>
       </table>
       <table class="metrics">
         <tr class="header">
-          <td>⬤ Placements</td>
+          <td>
+			<span class="icon">⬤</span>
+			<span class="name">Placements</span>
+		  </td>
           <td></td>
           <td colspan="2">Screenshots</td>
         </tr>

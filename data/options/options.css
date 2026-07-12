@@ -15,6 +15,8 @@ table {
 }
 
 input[type='checkbox'] {
+  width: 16px;
+  height: 16px;
   margin: auto;
   vertical-align: middle;
 }
@@ -73,8 +75,12 @@ table.settings tr td label {
   line-height: 72px;
 }
 
+table.settings tr td .name {
+  width: auto;
+}
+
 table.metrics {
-  border-spacing: 0 15px;
+  border-spacing: 0 25px;
 }
 
 table.metrics tr td[class] {
@@ -90,7 +96,7 @@ table.metrics tr td label {
   line-height: 200px;
 }
 
-table tr[class="header"] td {
+table tr[class='header'] td {
   color: #333;
   padding: 15px;
   font-size: 13px;
@@ -102,12 +108,29 @@ table tr[class="header"] td {
   text-overflow: ellipsis;
 }
 
-table tr[class="header"] td[colspan] {
+table tr[class='header'] td[colspan] {
   text-align: center;
 }
 
-table tr[class="header"] {
+table tr[class='header'] {
   background-color: #f0f0f2;
+}
+
+table tr[class='header'] .icon,
+table tr[class='header'] .name {
+  margin: 0;
+  border: 0;
+  padding: 0;
+  height: 16px;
+  align-items: center;
+  display: inline-flex;
+  justify-content: center;
+  background-color: transparent;
+}
+
+table tr[class='header'] .icon {
+  width: 16px;
+  font-size: 13px;
 }
 
 table tr:has(#linear),
@@ -115,32 +138,20 @@ table tr:has(#angular),
 table tr:has(#colorful),
 table tr:has(#circular),
 table tr:has(#grayscale) {
-  border-radius: 5px;
-  outline: solid 2px transparent;
+  border-radius: 3px;
+  outline: solid 2px rgb(0 0 0 / 5%);
 }
 
 html[placement='default'] table tr {
-  outline: solid 2px transparent;
+  outline: solid 2px rgb(0 0 0 / 5%);
 }
 
-html[placement='linear'] table tr:has(#linear) {
-  outline: solid 2px #f5c400;
-}
-
-html[placement='angular'] table tr:has(#angular) {
-  outline: solid 2px #f5c400;
-}
-
-html[placement='colorful'] table tr:has(#colorful) {
-  outline: solid 2px #f5c400;
-}
-
-html[placement='circular'] table tr:has(#circular) {
-  outline: solid 2px #f5c400;
-}
-
+html[placement='linear'] table tr:has(#linear),
+html[placement='angular'] table tr:has(#angular),
+html[placement='colorful'] table tr:has(#colorful),
+html[placement='circular'] table tr:has(#circular),
 html[placement='grayscale'] table tr:has(#grayscale) {
-  outline: solid 2px #f5c400;
+  outline: solid 2px #f5c400 !important;
 }
 
 .linear-1 {background: url('images/linear-1.png') no-repeat 100% center}
@@ -157,7 +168,8 @@ html[placement='grayscale'] table tr:has(#grayscale) {
 .content {
   border: 0;
   margin: 0;
-  padding: 0;
+  padding: 0 48px;
+  box-sizing: border-box;
 }
 
 .toolbar {
@@ -166,6 +178,7 @@ html[placement='grayscale'] table tr:has(#grayscale) {
   z-index: 11;
   width: 42px;
   position: fixed;
+  background-color: #fff;
 }
 
 .toolbar table {
@@ -208,8 +221,12 @@ html[theme='dark'] body {
   background-color: #1e1e1e;
 }
 
-html[theme='dark'] table tr[class="header"] {
+html[theme='dark'] table tr[class='header'] {
   background-color: #333333;
+}
+
+html[theme='dark'] .toolbar {
+  background-color: #1e1e1e;
 }
 
 html[theme='dark'] .toolbar table tr td:hover {
@@ -218,12 +235,20 @@ html[theme='dark'] .toolbar table tr td:hover {
 
 html[theme='dark'] table tr td label,
 html[theme='dark'] table.settings tr td.note,
-html[theme='dark'] table tr[class="header"] td {
+html[theme='dark'] table tr[class='header'] td {
   color: #ebebeb;
 }
 
 html[theme='dark'] table tr td label {
   border-color: rgb(255 255 255 / 25%);
+}
+
+html[theme='dark'] table tr:has(#linear),
+html[theme='dark'] table tr:has(#angular),
+html[theme='dark'] table tr:has(#colorful),
+html[theme='dark'] table tr:has(#circular),
+html[theme='dark'] table tr:has(#grayscale) {
+  outline-color: rgb(255 255 255 / 10%);
 }
 
 html[theme='dark'] .toolbar table tr td svg {
